@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Contact App</title>
+</head>
+<body>
+
+<h1>Contact Book</h1>
+
+<input id="name" placeholder="Name">
+<input id="phone" placeholder="Phone">
+<button onclick="addContact()">Add</button>
+
+<ul id="list"></ul>
+
+<script>
+async function load(){
+ let res=await fetch('http://YOUR-IP:3000/contacts');
+ let data=await res.json();
+
+ let html='';
+ data.forEach(x=>{
+   html += `<li>${x.name} - ${x.phone}
+   <button onclick="del(${x.id})">Delete</button></li>`;
+ });
+
+ document.getElementById('list').innerHTML=html;
+}
+
+async function addContact(){
+ await fetch('http://YOUR-IP:3000/contacts',{
+ method:'POST',
+ headers:{'Content-Type':'application/json'},
+ body:JSON.stringify({
+   name:name.value,
+   phone:phone.value
+ })
+});
+load();
+}
+
+async function del(id){
+ await fetch(`http://YOUR-IP:3000/contacts/${id}`,{
+ method:'DELETE'
+});
+load();
+}
+
+load();
+</script>
+
+</body>
+</html>
