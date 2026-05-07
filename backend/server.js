@@ -3,46 +3,102 @@ const mysql = require('mysql2');
 const cors = require('cors');
 
 const app = express();
+
 app.use(express.json());
 app.use(cors());
 
 const db = mysql.createConnection({
-  host:'localhost',
-  user:'contactuser',
-  password:'Password123',
-  database:'contactsdb'
+    host: 'localhost',
+    user: 'contactuser',
+    password: 'Password123',
+    database: 'contactsdb'
 });
 
-db.connect();
+
+db.connect((err) => {
+
+    if (err) {
+        console.error(err);
+        process.exit(1);
+    }
+
+    console.log("Database connected");
+});
+
 
 db.query(`
 CREATE TABLE IF NOT EXISTS contacts(
-id INT AUTO_INCREMENT PRIMARY KEY,
-name VARCHAR(100),
-phone VARCHAR(20)
-)`);
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    phone VARCHAR(20)
+)
+`, (err) => {
 
-app.get('/contacts',(req,res)=>{
-    db.query("SELECT * FROM contacts",(err,result)=>{
-        res.json(result);
-    });
+    if (err) {
+        console.error(err);
+    }
 });
 
-app.post('/contacts',(req,res)=>{
-    const {name,phone}=req.body;
-    db.query(
-      "INSERT INTO contacts(name,phone) VALUES (?,?)",
-      [name,phone]
-    );
-    res.send("Inserted");
+
+app.get('/contacts', (req, res) => {
+
+    db.query(
+        "SELECT * FROM contacts",
+        (err, result) => {
+
+            if (err) {
+                return res.status(500).json(err);
+            }
+
+            res.json(result);
+        }
+    );
 });
 
-app.delete('/contacts/:id',(req,res)=>{
-   db.query(
-     "DELETE FROM contacts WHERE id=?",
-     [req.params.id]
-   );
-   res.send("Deleted");
+
+app.post('/contacts', (req, res) => {
+
+    const { name, phone } = req.body;
+
+    db.query(
+        "INSERT INTO contacts(name,phone) VALUES (?,?)",
+        [name, phone],
+        (err, result) => {
+
+            if (err) {
+                return res.status(500).json(err);
+            }
+
+            res.json({
+                message: "Inserted",
+                id: result.insertId
+            });
+        }
+    );
 });
 
-app.listen(3000,()=>console.log("Running"));
+
+app.delete('/contacts/:id', (req, res) => {
+
+    db.query(
+        "DELETE FROM contacts WHERE id=?",
+        [req.params.id],
+        (err, result) => {
+
+            if (err) {
+                return res.status(500).json(err);
+            }
+
+            if (result.affectedRows === 0) {
+                return res.status(404).send("Not found");
+            }
+
+            res.send("Deleted");
+        }
+    );
+});
+
+
+app.listen(3000, () => {
+    console.log("Running on port 3000");
+});
