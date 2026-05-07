@@ -1,5 +1,7 @@
 pipeline {
-    agent label(slave-1)
+    agent {
+        label 'slave-1'
+    }
 
     stages {
 
@@ -26,9 +28,9 @@ pipeline {
         stage('Deploy Backend') {
             steps {
                 sh '''
-                pkill node || true
-                cd backend
-                nohup node server.js > app.log 2>&1 &
+                    pkill node || true
+                    cd backend
+                    nohup node server.js > app.log 2>&1 &
                 '''
             }
         }
@@ -36,8 +38,8 @@ pipeline {
         stage('Deploy Frontend') {
             steps {
                 sh '''
-                sudo mkdir -p /var/www/html
-                sudo cp frontend/index.html /var/www/html/index.html || true
+                    mkdir -p /var/www/html
+                    cp frontend/index.html /var/www/html/index.html || true
                 '''
             }
         }
