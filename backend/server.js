@@ -11,9 +11,8 @@ const db = mysql.createConnection({
     host: 'localhost',
     user: 'contactuser',
     password: 'Password123',
-    database: 'contactsdb'
+    database: 'contactdb'
 });
-
 
 db.connect((err) => {
 
@@ -25,20 +24,20 @@ db.connect((err) => {
     console.log("Database connected");
 });
 
-
 db.query(`
 CREATE TABLE IF NOT EXISTS contacts(
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100),
-    phone VARCHAR(20)
-)
+    email VARCHAR(20),
+    message TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 `, (err) => {
 
     if (err) {
         console.error(err);
     }
 });
-
 
 app.get('/contacts', (req, res) => {
 
@@ -55,14 +54,13 @@ app.get('/contacts', (req, res) => {
     );
 });
 
-
 app.post('/contacts', (req, res) => {
 
-    const { name, phone } = req.body;
+    const { name, email, message } = req.body;
 
     db.query(
-        "INSERT INTO contacts(name,phone) VALUES (?,?)",
-        [name, phone],
+        "INSERT INTO contacts(name, email, message) VALUES (?, ?, ?)",
+        [name, email, message],
         (err, result) => {
 
             if (err) {
@@ -76,7 +74,6 @@ app.post('/contacts', (req, res) => {
         }
     );
 });
-
 
 app.delete('/contacts/:id', (req, res) => {
 
@@ -97,7 +94,6 @@ app.delete('/contacts/:id', (req, res) => {
         }
     );
 });
-
 
 app.listen(3000, () => {
     console.log("Running on port 3000");
