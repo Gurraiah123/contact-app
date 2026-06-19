@@ -38,8 +38,8 @@ pipeline {
         stage('Deploy Frontend') {
             steps {
                 sh '''
-                    mkdir -p /var/www/html
-                    cp frontend/index.html /var/www/html/index.html || true
+                    sudo mkdir -p /var/www/html
+                    sudo cp frontend/index.html /var/www/html/index.html
                 '''
             }
         }
