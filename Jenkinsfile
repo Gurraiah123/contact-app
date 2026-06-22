@@ -5,7 +5,7 @@ pipeline {
 
     environment {
         EC2_USER = 'ubuntu'
-        EC2_IP   = '54.91.117.67'
+        EC2_IP   = '52.54.223.15'
         APP_DIR  = '/home/ubuntu/contact-app'
         SSH_KEY  = '/home/ubuntu/.ssh/ubuntu-key.pem'
     }
