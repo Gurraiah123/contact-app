@@ -7,7 +7,7 @@ pipeline {
         EC2_USER = 'ubuntu'
         EC2_IP   = '54.91.117.67'
         APP_DIR  = '/home/ubuntu/contact-app'
-        SSH_KEY  = '/home/ubuntu/.ssh/contact.pem'
+        SSH_KEY  = '/home/ubuntu/.ssh/ubuntu-key.pem'
     }
 
     stages {
