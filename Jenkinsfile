@@ -5,7 +5,7 @@ pipeline {
 
     environment {
         EC2_USER = 'ubuntu'
-        EC2_IP   = '50.17.20.230'
+        EC2_IP   = '54.91.117.67'
         APP_DIR  = '/home/ubuntu/contact-app'
     }
 
